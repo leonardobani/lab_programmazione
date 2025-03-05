@@ -1,22 +1,43 @@
 #include <iostream>
+#include <list>
 #include <utility>
 
-//
-//class Category {
-//    int participants = 0;
-//    Category(std::string name) { name = name;}
-//};
-//
+class Note;
+class Category;
+class CategoryCounter;
+class SpecialCategory;
+
+
+class SpecialCategory {
+
+    static std::list<Note*> specialList;
+
+public:
+    static void addSpecialNote(Note* newNote) {
+        specialList.push_back(newNote);
+        std::cout << "Note added to SpecialCategory\n";
+    }
+
+    static void removeSpecialNote(Note* noteToRemove) {
+        specialList.remove(noteToRemove);
+        std::cout << "Note removed from SpecialCategory\n";
+    }
+
+};
+std::list<Note*> SpecialCategory::specialList;
+
 class Note {
-  public:
+public:
     std::string title;
     std::string body;
-    std::string category;
-    bool blocked = false;
-    bool special = false;
+    bool blocked;
+    bool special;
     std::string const blocked_message = "please unlock before edit";
 
-    Note(const std::string &newTitle, const std::string &newBody, const std::string &newCategory, const bool newBlocked, const bool newSpecial){title = newTitle; body = newBody; category = newCategory; blocked = newBlocked; special = newSpecial;};
+    Note(std::string newTitle, std::string newBody, const bool newBlocked, bool newSpecial): title(std::move(newTitle)), body(std::move(newBody)), blocked(newBlocked), special(newSpecial) {
+        std::cout << "New note created successfully" << std::endl;
+        printNote();
+    }
 
     static void printErrorMessage(const std::string& error_message) {
         std::cout << "\033[1;31m" << error_message << "\033[0m\n\n";
@@ -32,38 +53,75 @@ class Note {
         else{printErrorMessage(blocked_message);}
     }
 
-    void editCategory(const std::string &newCategory) {
-        if(!blocked){category = newCategory;}
-        else{printErrorMessage(blocked_message);}
-    }
-
     void blockNote(const bool newBlocked){blocked = newBlocked;}
 
-    void specialNote(const bool newSpecial){special = newSpecial;}
+    void editSpecial(const bool newSpecial) {
+
+        if (newSpecial != special) {
+            newSpecial ? SpecialCategory::addSpecialNote(this) : SpecialCategory::removeSpecialNote(this);
+        }
+        special = newSpecial;
+    }
 
     void printNote() const {
         std::cout << "\033[1m" << title << "\033[0m";
         if(special){std::cout << "\033[33m" << "⭐" << "\033[0m";}
         if(blocked){std::cout << "\033[31m" << "🔒" << "\033[0m";}
         std::cout << "\n";
-        std::cout << "\033[3m" <<category << "\033[0m\n";
         std::cout << body << "\n";
         std::cout << "\n";
     }
 
 };
 
+class CategoryCounter {
+    int counter = 0;
+public:
+    ~CategoryCounter() = default;
+    void Update(const bool addOrRemove) {
+        addOrRemove ? counter++ : counter--;
+        std::cout << "current note number in category: " << counter << std::endl;
+    };
+};
+
+class Category{
+    std::string name;
+    std::list<Note*> list_;
+    CategoryCounter delegatedCounter;
+
+public:
+    explicit Category(std::string newName): name(std::move(newName)) {
+        std::cout << "New category created successfully: " << name << std::endl;
+        delegatedCounter = CategoryCounter();
+    }
+
+    void Notify(bool addOrRemove) {
+        std::cout << name << " updated successfully, ";
+        delegatedCounter.Update(addOrRemove);
+    }
+
+    void addNote(Note *newNote) {
+        list_.push_back(newNote);
+        Notify(true);
+    }
+
+    void removeNote(Note *newNote) {
+        list_.remove(newNote);
+        Notify(false);
+    }
+
+    ~Category() {
+        std::cout << name << " deleted successfully" << std::endl;
+    }
+
+};
 
 int main() {
-    Note *Gatto;
-    Gatto = new Note("Omaggio ai gatti", "belli i gatti", "animali", false, false);
-    Gatto->printNote();
-    Gatto->editTitle("Omaggio ai cani");
-    Gatto->printNote();
-    Gatto->blockNote(true);
-    Gatto->editTitle("Omaggio ai pesci");
-    Gatto->printNote();
-    Gatto->specialNote(true);
-    Gatto->printNote();
-    return 0;
+    auto Animals = Category("Animals");
+    auto Cats = Note("Meow", "fuck dogs", false, true);
+    Animals.addNote(&Cats);
+    auto Dogs = Note("Bau", "fuck cats", false, false);
+    Animals.addNote(&Dogs);
+    Animals.removeNote(&Cats);
+    Cats.editBody("cats rocks");
 }
