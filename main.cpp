@@ -9,9 +9,7 @@ class SpecialCategory;
 
 
 class SpecialCategory {
-
     static std::list<Note*> specialList;
-
 public:
     static void addSpecialNote(Note* newNote) {
         specialList.push_back(newNote);
@@ -22,17 +20,15 @@ public:
         specialList.remove(noteToRemove);
         std::cout << "Note removed from SpecialCategory\n";
     }
-
 };
-std::list<Note*> SpecialCategory::specialList;
 
 class Note {
-public:
     std::string title;
     std::string body;
     bool blocked;
     bool special;
     std::string const blocked_message = "please unlock before edit";
+public:
 
     Note(std::string newTitle, std::string newBody, const bool newBlocked, bool newSpecial): title(std::move(newTitle)), body(std::move(newBody)), blocked(newBlocked), special(newSpecial) {
         std::cout << "New note created successfully" << std::endl;
@@ -95,7 +91,7 @@ public:
         delegatedCounter = CategoryCounter();
     }
 
-    void Notify(bool addOrRemove) {
+    void Notify(const bool addOrRemove) {
         std::cout << name << " updated successfully, ";
         delegatedCounter.Update(addOrRemove);
     }
@@ -116,6 +112,7 @@ public:
 
 };
 
+
 int main() {
     auto Animals = Category("Animals");
     auto Cats = Note("Meow", "fuck dogs", false, true);
@@ -124,4 +121,5 @@ int main() {
     Animals.addNote(&Dogs);
     Animals.removeNote(&Cats);
     Cats.editBody("cats rocks");
+    SpecialCategory::printAllSpecialNotes();
 }
