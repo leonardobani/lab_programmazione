@@ -65,6 +65,16 @@ CMAKE_BINARY_DIR = /home/yoga/CLionProjects/lab_programmazione/cmake-build-debug
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running tests..."
+	/app/extra/clion/bin/cmake/linux/x64/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+.PHONY : test/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "No interactive CMake dialog available..."
@@ -84,6 +94,51 @@ rebuild_cache:
 # Special rule for the target rebuild_cache
 rebuild_cache/fast: rebuild_cache
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"gmock\" \"gtest\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+.PHONY : list_install_components/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Install the project..."
+	/app/extra/clion/bin/cmake/linux/x64/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Install the project..."
+	/app/extra/clion/bin/cmake/linux/x64/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing only the local directory..."
+	/app/extra/clion/bin/cmake/linux/x64/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing only the local directory..."
+	/app/extra/clion/bin/cmake/linux/x64/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing the project stripped..."
+	/app/extra/clion/bin/cmake/linux/x64/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing the project stripped..."
+	/app/extra/clion/bin/cmake/linux/x64/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -117,24 +172,89 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named lab_programmazione
+# Target rules for targets named 4real
 
 # Build rule for target.
-lab_programmazione: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 lab_programmazione
-.PHONY : lab_programmazione
+4real: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 4real
+.PHONY : 4real
 
 # fast build rule for target.
-lab_programmazione/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/lab_programmazione.dir/build.make CMakeFiles/lab_programmazione.dir/build
-.PHONY : lab_programmazione/fast
+4real/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/4real.dir/build.make CMakeFiles/4real.dir/build
+.PHONY : 4real/fast
+
+#=============================================================================
+# Target rules for targets named runTests
+
+# Build rule for target.
+runTests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 runTests
+.PHONY : runTests
+
+# fast build rule for target.
+runTests/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/build
+.PHONY : runTests/fast
+
+#=============================================================================
+# Target rules for targets named gmock
+
+# Build rule for target.
+gmock: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gmock
+.PHONY : gmock
+
+# fast build rule for target.
+gmock/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/build
+.PHONY : gmock/fast
+
+#=============================================================================
+# Target rules for targets named gmock_main
+
+# Build rule for target.
+gmock_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gmock_main
+.PHONY : gmock_main
+
+# fast build rule for target.
+gmock_main/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/build
+.PHONY : gmock_main/fast
+
+#=============================================================================
+# Target rules for targets named gtest
+
+# Build rule for target.
+gtest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest
+.PHONY : gtest
+
+# fast build rule for target.
+gtest/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest.dir/build
+.PHONY : gtest/fast
+
+#=============================================================================
+# Target rules for targets named gtest_main
+
+# Build rule for target.
+gtest_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest_main
+.PHONY : gtest_main
+
+# fast build rule for target.
+gtest_main/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/build
+.PHONY : gtest_main/fast
 
 main.o: main.cpp.o
 .PHONY : main.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/lab_programmazione.dir/build.make CMakeFiles/lab_programmazione.dir/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/4real.dir/build.make CMakeFiles/4real.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -142,7 +262,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/lab_programmazione.dir/build.make CMakeFiles/lab_programmazione.dir/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/4real.dir/build.make CMakeFiles/4real.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -150,8 +270,104 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/lab_programmazione.dir/build.make CMakeFiles/lab_programmazione.dir/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/4real.dir/build.make CMakeFiles/4real.dir/main.cpp.s
 .PHONY : main.cpp.s
+
+test/test_Category.o: test/test_Category.cpp.o
+.PHONY : test/test_Category.o
+
+# target to build an object file
+test/test_Category.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/test/test_Category.cpp.o
+.PHONY : test/test_Category.cpp.o
+
+test/test_Category.i: test/test_Category.cpp.i
+.PHONY : test/test_Category.i
+
+# target to preprocess a source file
+test/test_Category.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/test/test_Category.cpp.i
+.PHONY : test/test_Category.cpp.i
+
+test/test_Category.s: test/test_Category.cpp.s
+.PHONY : test/test_Category.s
+
+# target to generate assembly for a file
+test/test_Category.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/test/test_Category.cpp.s
+.PHONY : test/test_Category.cpp.s
+
+test/test_CategoryCounter.o: test/test_CategoryCounter.cpp.o
+.PHONY : test/test_CategoryCounter.o
+
+# target to build an object file
+test/test_CategoryCounter.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/test/test_CategoryCounter.cpp.o
+.PHONY : test/test_CategoryCounter.cpp.o
+
+test/test_CategoryCounter.i: test/test_CategoryCounter.cpp.i
+.PHONY : test/test_CategoryCounter.i
+
+# target to preprocess a source file
+test/test_CategoryCounter.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/test/test_CategoryCounter.cpp.i
+.PHONY : test/test_CategoryCounter.cpp.i
+
+test/test_CategoryCounter.s: test/test_CategoryCounter.cpp.s
+.PHONY : test/test_CategoryCounter.s
+
+# target to generate assembly for a file
+test/test_CategoryCounter.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/test/test_CategoryCounter.cpp.s
+.PHONY : test/test_CategoryCounter.cpp.s
+
+test/test_Note.o: test/test_Note.cpp.o
+.PHONY : test/test_Note.o
+
+# target to build an object file
+test/test_Note.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/test/test_Note.cpp.o
+.PHONY : test/test_Note.cpp.o
+
+test/test_Note.i: test/test_Note.cpp.i
+.PHONY : test/test_Note.i
+
+# target to preprocess a source file
+test/test_Note.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/test/test_Note.cpp.i
+.PHONY : test/test_Note.cpp.i
+
+test/test_Note.s: test/test_Note.cpp.s
+.PHONY : test/test_Note.s
+
+# target to generate assembly for a file
+test/test_Note.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/test/test_Note.cpp.s
+.PHONY : test/test_Note.cpp.s
+
+test/test_main.o: test/test_main.cpp.o
+.PHONY : test/test_main.o
+
+# target to build an object file
+test/test_main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/test/test_main.cpp.o
+.PHONY : test/test_main.cpp.o
+
+test/test_main.i: test/test_main.cpp.i
+.PHONY : test/test_main.i
+
+# target to preprocess a source file
+test/test_main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/test/test_main.cpp.i
+.PHONY : test/test_main.cpp.i
+
+test/test_main.s: test/test_main.cpp.s
+.PHONY : test/test_main.s
+
+# target to generate assembly for a file
+test/test_main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/runTests.dir/build.make CMakeFiles/runTests.dir/test/test_main.cpp.s
+.PHONY : test/test_main.cpp.s
 
 # Help Target
 help:
@@ -160,11 +376,33 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... install"
+	@echo "... install/local"
+	@echo "... install/strip"
+	@echo "... list_install_components"
 	@echo "... rebuild_cache"
-	@echo "... lab_programmazione"
+	@echo "... test"
+	@echo "... 4real"
+	@echo "... gmock"
+	@echo "... gmock_main"
+	@echo "... gtest"
+	@echo "... gtest_main"
+	@echo "... runTests"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... test/test_Category.o"
+	@echo "... test/test_Category.i"
+	@echo "... test/test_Category.s"
+	@echo "... test/test_CategoryCounter.o"
+	@echo "... test/test_CategoryCounter.i"
+	@echo "... test/test_CategoryCounter.s"
+	@echo "... test/test_Note.o"
+	@echo "... test/test_Note.i"
+	@echo "... test/test_Note.s"
+	@echo "... test/test_main.o"
+	@echo "... test/test_main.i"
+	@echo "... test/test_main.s"
 .PHONY : help
 
 

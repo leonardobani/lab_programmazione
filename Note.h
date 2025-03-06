@@ -10,12 +10,13 @@
 
 
 class Note {
-    std::string title;
     std::string body;
     bool blocked;
     bool special;
     std::string const blocked_message = "please unlock before edit";
 public:
+    std::string title;
+
 
     Note(std::string newTitle, std::string newBody, const bool newBlocked, const bool newSpecial): title(std::move(newTitle)), body(std::move(newBody)), blocked(newBlocked), special(newSpecial) {
         std::cout << "New note created successfully" << std::endl;
