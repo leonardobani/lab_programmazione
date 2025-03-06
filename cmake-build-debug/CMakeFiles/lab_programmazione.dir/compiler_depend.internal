@@ -3,6 +3,10 @@
 
 CMakeFiles/lab_programmazione.dir/main.cpp.o
  /home/yoga/CLionProjects/lab_programmazione/main.cpp
+ /home/yoga/CLionProjects/lab_programmazione/Category.h
+ /home/yoga/CLionProjects/lab_programmazione/CategoryCounter.h
+ /home/yoga/CLionProjects/lab_programmazione/Note.h
+ /home/yoga/CLionProjects/lab_programmazione/SpecialNotes.h
  /usr/include/alloca.h
  /usr/include/asm-generic/errno-base.h
  /usr/include/asm-generic/errno.h
@@ -63,7 +67,6 @@ CMakeFiles/lab_programmazione.dir/main.cpp.o
  /usr/include/c++/14.2.0/bits/stl_iterator_base_types.h
  /usr/include/c++/14.2.0/bits/stl_list.h
  /usr/include/c++/14.2.0/bits/stl_pair.h
- /usr/include/c++/14.2.0/bits/stl_relops.h
  /usr/include/c++/14.2.0/bits/streambuf.tcc
  /usr/include/c++/14.2.0/bits/streambuf_iterator.h
  /usr/include/c++/14.2.0/bits/string_view.tcc
@@ -109,7 +112,6 @@ CMakeFiles/lab_programmazione.dir/main.cpp.o
  /usr/include/c++/14.2.0/tuple
  /usr/include/c++/14.2.0/type_traits
  /usr/include/c++/14.2.0/typeinfo
- /usr/include/c++/14.2.0/utility
  /usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/atomic_word.h
  /usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/c++allocator.h
  /usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/c++config.h

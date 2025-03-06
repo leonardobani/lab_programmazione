@@ -3,4 +3,9 @@ project(lab_programmazione)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(lab_programmazione main.cpp)
+add_executable(lab_programmazione main.cpp
+        Category.h
+        CategoryCounter.h
+        SpecialNotes.h
+        Note.h
+        SpecialNotes.h)
