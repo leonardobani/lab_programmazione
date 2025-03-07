@@ -39,10 +39,25 @@ public:
         std::cout << name << " deleted successfully" << std::endl;
     }
 
+    std::list<Note*> findByKey(const std::string& key) {
+        std::list<Note*> results;
+
+        for (Note* Note : list_) {
+            std::string noteTitle = Note->getTitle();
+            std::string noteBody = Note->getBody();
+
+            if (noteTitle.find(key) != std::string::npos || noteBody.find(key) != std::string::npos) {
+                results.push_back(Note);
+            }
+        }
+        return results;
+    }
+
     void printCategory() const {
         std::cout << "Category: " << name << "\n";
         for (auto note : list_) {
-            note->printNote();
+            std::string noteText = note->printNote();
+            std::cout << noteText << "\n";
         }
     }
 
