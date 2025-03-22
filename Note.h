@@ -9,6 +9,7 @@
 #include "SpecialNotes.h"
 
 
+
 class Note {
     std::string body;
     bool blocked;
