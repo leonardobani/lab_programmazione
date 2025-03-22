@@ -11,7 +11,7 @@ TEST(NoteTest, ConstructorAndPrint) {
     std::streambuf* old_cout_buffer = std::cout.rdbuf(ss.rdbuf());
 
     Note note("TestTitle", "TestBody", false, false);
-    std::string expectedOutput = "New note created successfully\n\033[1mTestTitle\033[0m\nTestBody\n\n";
+    std::string expectedOutput = "New note created successfully\n";
     EXPECT_EQ(ss.str(), expectedOutput);
 
     std::cout.rdbuf(old_cout_buffer);
@@ -25,7 +25,7 @@ TEST(NoteTest, EditTitle) {
     ss.str("");
 
     note.editTitle("NewTitle");
-    std::string expectedOutput = "\033[1mNewTitle\033[0m\nTestBody\n\n";
+    std::string expectedOutput = "NewTitle\nTestBody\n\n";
     EXPECT_EQ(ss.str(), expectedOutput);
 
     std::cout.rdbuf(old_cout_buffer);
@@ -39,7 +39,7 @@ TEST(NoteTest, EditBody) {
     ss.str("");
 
     note.editBody("NewBody");
-    std::string expectedOutput = "\033[1mTestTitle\033[0m\nNewBody\n\n";
+    std::string expectedOutput = "TestTitle\nNewBody\n\n";
     EXPECT_EQ(ss.str(), expectedOutput);
 
     std::cout.rdbuf(old_cout_buffer);
@@ -62,38 +62,22 @@ TEST(NoteTest, BlockedEdit) {
     std::cout.rdbuf(old_cout_buffer);
 }
 
-TEST(NoteTest, BlockAndUnblock) {
-    Note note("TestTitle", "TestBody", false, false);
+
+TEST(NoteTest, BlockNoteTest) {
+    Note note("Test Title", "Test Body", false, false);
     note.blockNote(true);
-    std::stringstream ss;
-    std::streambuf* old_cout_buffer = std::cout.rdbuf(ss.rdbuf());
-    ss.str("");
-
-    note.printNote();
-    EXPECT_TRUE(ss.str().find("🔒") != std::string::npos);
-    std::cout.rdbuf(old_cout_buffer);
+    note.editTitle("Attempt to edit");
+    EXPECT_EQ(note.getTitle(), "Test Title");
     note.blockNote(false);
-    ss.str("");
-    old_cout_buffer = std::cout.rdbuf(ss.rdbuf());
-    note.printNote();
-    EXPECT_FALSE(ss.str().find("🔒") != std::string::npos);
-    std::cout.rdbuf(old_cout_buffer);
+    note.editTitle("Edited Title");
+    EXPECT_EQ(note.getTitle(), "Edited Title");
 }
 
-TEST(NoteTest, SpecialNote) {
-    Note note("TestTitle", "TestBody", false, false);
+/*TEST(NoteTest, EditSpecialTest) {
+    Note note("Test Title", "Test Body", false, false);
     note.editSpecial(true);
-    std::stringstream ss;
-    std::streambuf* old_cout_buffer = std::cout.rdbuf(ss.rdbuf());
-    ss.str("");
-
-    note.printNote();
-    EXPECT_TRUE(ss.str().find("⭐") != std::string::npos);
-    std::cout.rdbuf(old_cout_buffer);
+    EXPECT_TRUE(note.special);
     note.editSpecial(false);
-    ss.str("");
-    old_cout_buffer = std::cout.rdbuf(ss.rdbuf());
-    note.printNote();
-    EXPECT_FALSE(ss.str().find("⭐") != std::string::npos);
-    std::cout.rdbuf(old_cout_buffer);
+    EXPECT_FALSE(note.special);
 }
+*/

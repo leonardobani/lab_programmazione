@@ -29,6 +29,7 @@ public:
     void editTitle(const std::string &newTitle) {
         if(!blocked) {
             title = newTitle;
+            std::cout << printNote() << std::endl;
         }
         else{printErrorMessage(blocked_message);}
     }
@@ -36,6 +37,7 @@ public:
     void editBody(const std::string &newBody) {
         if(!blocked) {
             body = newBody;
+            std::cout << printNote() << std::endl;
         }
         else{printErrorMessage(blocked_message);}
     }

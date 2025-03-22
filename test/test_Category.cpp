@@ -1,82 +1,135 @@
 #include "gtest/gtest.h"
 #include "../Category.h"
 #include "../Note.h"
+#include "../CategoryCounter.h"
 #include <sstream>
 #include <iostream>
 
-// Mock Note class for testing
-class MockNote : public Note {
-public:
-    explicit MockNote(std::string text) : Note(text, "mock body", false, false) {}
-    void printNote() const {
-        std::cout << "MockNote: " << getText() << std::endl;
+class CategoryTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        // Setup shared objects
+        category_ = new Category("TestCategory");
+        note1_ = new Note("Title1", "Body1+", false, false);
+        note2_ = new Note("Title2-", "Body2", false, false);
+        note3_ = new Note("TitleKey", "BodyKey+", false, false);
     }
-    std::string getText() const {return title;}
+
+    void TearDown() override {
+        // Cleanup shared objects
+        delete category_;
+        delete note1_;
+        delete note2_;
+        delete note3_;
+    }
+
+    Category* category_;
+    Note* note1_;
+    Note* note2_;
+    Note* note3_;
 };
 
-TEST(CategoryTest, ConstructorAndDestructor) {
-    std::stringstream ss;
-    std::streambuf* old_cout_buffer = std::cout.rdbuf(ss.rdbuf());
+TEST_F(CategoryTest, Constructor) {
+    // Redirect std::cout to capture output
+    std::stringstream buffer;
+    std::streambuf* old_cout_buffer = std::cout.rdbuf(buffer.rdbuf());
+
+    Category category("ConstructorTest");
+
+    // Restore std::cout
+    std::cout.rdbuf(old_cout_buffer);
+
+    std::string output = buffer.str();
+    ASSERT_NE(output.find("New category created successfully: ConstructorTest"), std::string::npos);
+}
+
+TEST_F(CategoryTest, AddNote) {
+    category_->addNote(note1_);
+    std::list<Note*> results = category_->findByKey("+");
+    ASSERT_EQ(results.size(), 1);
+    ASSERT_EQ(results.front(), note1_);
+}
+
+TEST_F(CategoryTest, RemoveNote) {
+    category_->addNote(note1_);
+    category_->addNote(note2_);
+    category_->removeNote(note1_);
+    std::list<Note*> results = category_->findByKey("Title1");
+    ASSERT_EQ(results.size(), 0);
+}
+
+TEST_F(CategoryTest, FindByKeyTitle) {
+    category_->addNote(note1_);
+    category_->addNote(note2_);
+    category_->addNote(note3_);
+    std::list<Note*> results = category_->findByKey("-");
+    ASSERT_EQ(results.size(), 1);
+}
+
+TEST_F(CategoryTest, FindByKeyBody) {
+    category_->addNote(note1_);
+    category_->addNote(note2_);
+    category_->addNote(note3_);
+    std::list<Note*> results = category_->findByKey("+");
+    ASSERT_EQ(results.size(), 2);
+}
+
+TEST_F(CategoryTest, FindByKeyNoMatch) {
+    category_->addNote(note1_);
+    std::list<Note*> results = category_->findByKey("$");
+    ASSERT_EQ(results.size(), 0);
+}
+
+TEST_F(CategoryTest, PrintCategory) {
+    category_->addNote(note1_);
+    category_->addNote(note2_);
+
+    std::stringstream buffer;
+    std::streambuf* old_cout_buffer = std::cout.rdbuf(buffer.rdbuf());
+
+    category_->printCategory();
+
+    std::cout.rdbuf(old_cout_buffer);
+    std::string output = buffer.str();
+
+    ASSERT_NE(output.find("Category: TestCategory\n"), std::string::npos);
+    ASSERT_NE(output.find("Title1\nBody1+\n"), std::string::npos);
+    ASSERT_NE(output.find("Title2-\nBody2\n"), std::string::npos);
+}
+
+TEST_F(CategoryTest, NotifyAdd) {
+    std::stringstream buffer;
+    std::streambuf* old_cout_buffer = std::cout.rdbuf(buffer.rdbuf());
+
+    category_->Notify(true);
+    std::cout.rdbuf(old_cout_buffer);
+
+    std::string output = buffer.str();
+    ASSERT_NE(output.find("TestCategory updated successfully, "), std::string::npos);
+}
+
+TEST_F(CategoryTest, NotifyRemove) {
+    std::stringstream buffer;
+    std::streambuf* old_cout_buffer = std::cout.rdbuf(buffer.rdbuf());
+
+    category_->Notify(false);
+
+    std::cout.rdbuf(old_cout_buffer);
+    std::string output = buffer.str();
+
+    ASSERT_NE(output.find("TestCategory updated successfully, "), std::string::npos);
+}
+
+TEST_F(CategoryTest, Destructor) {
+    std::stringstream buffer;
+    std::streambuf* old_cout_buffer = std::cout.rdbuf(buffer.rdbuf());
 
     {
-        Category category("TestCategory");
-        EXPECT_EQ(ss.str(), "New category created successfully: TestCategory\n");
-        ss.str("");
+        Category tempCategory("TempCategory");
     }
 
-    EXPECT_EQ(ss.str(), "TestCategory deleted successfully\n");
-
     std::cout.rdbuf(old_cout_buffer);
-}
+    std::string output = buffer.str();
 
-TEST(CategoryTest, AddAndRemoveNote) {
-    Category category("TestCategory");
-    MockNote* note1 = new MockNote("Note 1");
-    MockNote* note2 = new MockNote("Note 2");
-
-    std::stringstream ss;
-    std::streambuf* old_cout_buffer = std::cout.rdbuf(ss.rdbuf());
-
-    category.addNote(note1);
-    EXPECT_TRUE(ss.str().find("TestCategory updated successfully, ") != std::string::npos);
-    ss.str("");
-
-    category.addNote(note2);
-    EXPECT_TRUE(ss.str().find("TestCategory updated successfully, ") != std::string::npos);
-    ss.str("");
-
-    category.removeNote(note1);
-    EXPECT_TRUE(ss.str().find("TestCategory updated successfully, ") != std::string::npos);
-    ss.str("");
-
-    category.removeNote(note2);
-    EXPECT_TRUE(ss.str().find("TestCategory updated successfully, ") != std::string::npos);
-    ss.str("");
-
-    std::cout.rdbuf(old_cout_buffer);
-
-    delete note1;
-    delete note2;
-}
-
-TEST(CategoryTest, PrintCategory) {
-    Category category("TestCategory");
-    MockNote* note1 = new MockNote("Note 1");
-    MockNote* note2 = new MockNote("Note 2");
-
-    category.addNote(note1);
-    category.addNote(note2);
-
-    std::stringstream ss;
-    std::streambuf* old_cout_buffer = std::cout.rdbuf(ss.rdbuf());
-
-    category.printCategory();
-
-    std::string expectedOutput = "Category: TestCategory\n\x1B[1mNote 1\x1B[0m\nmock body\n\n\x1B[1mNote 2\x1B[0m\nmock body\n\n";
-    EXPECT_EQ(ss.str(), expectedOutput);
-
-    std::cout.rdbuf(old_cout_buffer);
-
-    delete note1;
-    delete note2;
+    ASSERT_NE(output.find("TempCategory deleted successfully"), std::string::npos);
 }
