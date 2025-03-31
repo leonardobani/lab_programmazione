@@ -18,8 +18,6 @@ public:
     Note(std::string newTitle, std::string newBody, const bool newBlocked, const bool newSpecial): title(std::move(newTitle)), body(std::move(newBody)), blocked(newBlocked), special(newSpecial) {
         std::cout << "New note created successfully" << std::endl;
     }
-    //TODO non deve interagire
-
 
     void editTitle(const std::string &newTitle) {
         if(!blocked) {

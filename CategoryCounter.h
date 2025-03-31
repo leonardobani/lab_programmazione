@@ -7,12 +7,17 @@
 #include <iostream>
 //TODO aggiungere interfce class
 
+class IObserver {
+public:
+    virtual ~IObserver()= default;
+    virtual void Update(bool variable) = 0;
+};
 
-class CategoryCounter {
+class CategoryCounter : public IObserver {
     int counter = 0;
 public:
-    ~CategoryCounter() = default;
-    void Update(const bool addOrRemove) {
+    ~CategoryCounter() override = default;
+    void Update(const bool addOrRemove) override {
         addOrRemove ? counter++ : counter--;
         std::cout << "current note number in category: " << counter << std::endl;
     };

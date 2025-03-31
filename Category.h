@@ -11,11 +11,18 @@
 #include "Note.h"
 #include "CategoryCounter.h"
 
-class Category{
+class ISubject {
+    public:
+        virtual ~ISubject()= default;
+        virtual void Attach(IObserver *observer) = 0;
+        virtual void Detach(IObserver *observer) = 0;
+        virtual void Notify(bool variable) = 0;
+};
+
+class Category : public ISubject {
     std::string name;
     std::list<Note*> list_;
     CategoryCounter delegatedCounter;
-    //TODO elenco note per sapere n speciali e n totale, risolvo quindi conflitto con special notes (da eliminare)
 
 public:
     explicit Category(std::string newName): name(std::move(newName)) {
@@ -37,7 +44,7 @@ public:
         return size;
     }
 
-    void Notify(const bool addOrRemove) {
+    void Notify(const bool addOrRemove) override {
         std::cout << name << " updated successfully, ";
         delegatedCounter.Update(addOrRemove);
     }
