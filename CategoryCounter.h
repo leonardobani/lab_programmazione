@@ -5,6 +5,8 @@
 #ifndef CATEGORYCOUNTER_H
 #define CATEGORYCOUNTER_H
 #include <iostream>
+//TODO aggiungere interfce class
+
 
 class CategoryCounter {
     int counter = 0;

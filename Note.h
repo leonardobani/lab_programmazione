@@ -6,10 +6,6 @@
 #define NOTE_H
 #include <ostream>
 
-#include "SpecialNotes.h"
-
-
-
 class Note {
     std::string body;
     bool blocked;
@@ -22,17 +18,14 @@ public:
     Note(std::string newTitle, std::string newBody, const bool newBlocked, const bool newSpecial): title(std::move(newTitle)), body(std::move(newBody)), blocked(newBlocked), special(newSpecial) {
         std::cout << "New note created successfully" << std::endl;
     }
+    //TODO non deve interagire
 
-    static void printErrorMessage(const std::string& error_message) {
-        std::cout << "\033[1;31m" << error_message << "\033[0m\n\n";
-    }
 
     void editTitle(const std::string &newTitle) {
         if(!blocked) {
             title = newTitle;
             std::cout << printNote() << std::endl;
         }
-        else{printErrorMessage(blocked_message);}
     }
 
     void editBody(const std::string &newBody) {
@@ -40,16 +33,13 @@ public:
             body = newBody;
             std::cout << printNote() << std::endl;
         }
-        else{printErrorMessage(blocked_message);}
     }
 
-    void blockNote(const bool newBlocked){blocked = newBlocked;}
+    void blockNote(bool newBlocked){blocked = newBlocked;}
+    void specialNote(bool newSpecial){special = newSpecial;}
 
-    void editSpecial(const bool newSpecial) {
-        if (newSpecial != special) {
-            //newSpecial ? SpecialNotes::addSpecialNote(this) : SpecialNotes::removeSpecialNote(this);
-        }
-        special = newSpecial;
+    bool getSpecial () const {
+        return special;
     }
 
     std::string getTitle() const {
