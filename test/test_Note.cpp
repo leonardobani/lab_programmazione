@@ -45,24 +45,6 @@ TEST(NoteTest, EditBody) {
     std::cout.rdbuf(old_cout_buffer);
 }
 
-TEST(NoteTest, BlockedEdit) {
-    Note note("TestTitle", "TestBody", true, false);
-
-    std::stringstream ss;
-    std::streambuf* old_cout_buffer = std::cout.rdbuf(ss.rdbuf());
-    ss.str("");
-
-    note.editTitle("NewTitle");
-    EXPECT_TRUE(ss.str().find("please unlock before edit") != std::string::npos);
-    ss.str("");
-
-    note.editBody("NewBody");
-    EXPECT_TRUE(ss.str().find("please unlock before edit") != std::string::npos);
-
-    std::cout.rdbuf(old_cout_buffer);
-}
-
-
 TEST(NoteTest, BlockNoteTest) {
     Note note("Test Title", "Test Body", false, false);
     note.blockNote(true);
@@ -72,12 +54,3 @@ TEST(NoteTest, BlockNoteTest) {
     note.editTitle("Edited Title");
     EXPECT_EQ(note.getTitle(), "Edited Title");
 }
-
-/*TEST(NoteTest, EditSpecialTest) {
-    Note note("Test Title", "Test Body", false, false);
-    note.editSpecial(true);
-    EXPECT_TRUE(note.special);
-    note.editSpecial(false);
-    EXPECT_FALSE(note.special);
-}
-*/

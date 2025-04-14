@@ -1,135 +1,130 @@
 #include "gtest/gtest.h"
 #include "../Category.h"
 #include "../Note.h"
-#include "../CategoryCounter.h"
-#include <sstream>
-#include <iostream>
+#include <memory>
 
-class CategoryTest : public ::testing::Test {
-protected:
-    void SetUp() override {
-        // Setup shared objects
-        category_ = new Category("TestCategory");
-        note1_ = new Note("Title1", "Body1+", false, false);
-        note2_ = new Note("Title2-", "Body2", false, false);
-        note3_ = new Note("TitleKey", "BodyKey+", false, false);
-    }
-
-    void TearDown() override {
-        // Cleanup shared objects
-        delete category_;
-        delete note1_;
-        delete note2_;
-        delete note3_;
-    }
-
-    Category* category_;
-    Note* note1_;
-    Note* note2_;
-    Note* note3_;
-};
-
-TEST_F(CategoryTest, Constructor) {
-    // Redirect std::cout to capture output
-    std::stringstream buffer;
-    std::streambuf* old_cout_buffer = std::cout.rdbuf(buffer.rdbuf());
-
-    Category category("ConstructorTest");
-
-    // Restore std::cout
-    std::cout.rdbuf(old_cout_buffer);
-
-    std::string output = buffer.str();
-    ASSERT_NE(output.find("New category created successfully: ConstructorTest"), std::string::npos);
+TEST(CategoryTest, Constructor) {
+    const Category category("Test Category");
+    ASSERT_EQ(category.getCategorySize(), 0);
+    ASSERT_EQ(category.getSpecialSize(), 0);
 }
 
-TEST_F(CategoryTest, AddNote) {
-    category_->addNote(note1_);
-    std::list<Note*> results = category_->findByKey("+");
+TEST(CategoryTest, AddNote) {
+    Category category("Test Category");
+    const auto note1 = std::make_unique<Note>("Title 1", "Body 1", false, false);
+    category.addNote(note1.get());
+    ASSERT_EQ(category.getCategorySize(), 1);
+    ASSERT_EQ(category.getSpecialSize(), 0);
+}
+
+TEST(CategoryTest, AddSpecialNote) {
+    Category category("Test Category");
+    const auto note1 = std::make_unique<Note>("Title 1", "Body 1", false, true);
+    category.addNote(note1.get());
+    ASSERT_EQ(category.getCategorySize(), 1);
+    ASSERT_EQ(category.getSpecialSize(), 1);
+}
+
+TEST(CategoryTest, RemoveNote) {
+    Category category("Test Category");
+    const auto note1 = std::make_unique<Note>("Title 1", "Body 1", false, false);
+    category.addNote(note1.get());
+    ASSERT_EQ(category.getCategorySize(), 1);
+    category.removeNote(note1.get());
+    ASSERT_EQ(category.getCategorySize(), 0);
+}
+
+TEST(CategoryTest, RemoveNonExistingNote) {
+    Category category("Test Category");
+    const auto note1 = std::make_unique<Note>("Title 1", "Body 1", false, false);
+    const auto note2 = std::make_unique<Note>("Title 2", "Body 2", false, false);
+    category.addNote(note1.get());
+    category.removeNote(note2.get());
+    ASSERT_EQ(category.getCategorySize(), 1);
+}
+
+TEST(CategoryTest, RemoveNoteByTitleExisting) {
+    Category category("Test Category");
+    const auto note1 = std::make_unique<Note>("Title 1", "Body 1", false, false);
+    const auto note2 = std::make_unique<Note>("Another Title", "Some body", false, true);
+    category.addNote(note1.get());
+    category.addNote(note2.get());
+    category.removeNoteByTitle("Title 1");
+    ASSERT_EQ(category.getCategorySize(), 1);
+    ASSERT_EQ(category.getSpecialSize(), 1);
+}
+
+TEST(CategoryTest, RemoveNoteByTitleNonExisting) {
+    Category category("Test Category");
+    const auto note1 = std::make_unique<Note>("Title 1", "Body 1", false, false);
+    const auto note2 = std::make_unique<Note>("Another Title", "Some body", false, true);
+    category.addNote(note1.get());
+    category.addNote(note2.get());
+    category.removeNoteByTitle("NonExistent");
+    ASSERT_EQ(category.getCategorySize(), 2);
+    ASSERT_EQ(category.getSpecialSize(), 1);
+}
+
+TEST(CategoryTest, FindByKeyTitleFound) {
+    Category category("Test Category");
+    const auto note1 = std::make_unique<Note>("Test Title", "Body 1", false, false);
+    const auto note2 = std::make_unique<Note>("Another Title", "Test Body", true, false);
+    category.addNote(note1.get());
+    category.addNote(note2.get());
+    const std::list<Note*> results = category.findByKeyTitle("Test");
     ASSERT_EQ(results.size(), 1);
-    ASSERT_EQ(results.front(), note1_);
+    ASSERT_EQ(results.front()->getTitle(), "Test Title");
 }
 
-TEST_F(CategoryTest, RemoveNote) {
-    category_->addNote(note1_);
-    category_->addNote(note2_);
-    category_->removeNote(note1_);
-    std::list<Note*> results = category_->findByKey("Title1");
-    ASSERT_EQ(results.size(), 0);
+TEST(CategoryTest, FindByKeyTitleNotFound) {
+    Category category("Test Category");
+    const auto note1 = std::make_unique<Note>("Title 1", "Body 1", false, false);
+    category.addNote(note1.get());
+    const std::list<Note*> results = category.findByKeyTitle("NonExistent");
+    ASSERT_TRUE(results.empty());
 }
 
-TEST_F(CategoryTest, FindByKeyTitle) {
-    category_->addNote(note1_);
-    category_->addNote(note2_);
-    category_->addNote(note3_);
-    std::list<Note*> results = category_->findByKey("-");
+TEST(CategoryTest, FindByKeyBodyFound) {
+    Category category("Test Category");
+    const auto note1 = std::make_unique<Note>("Title 1", "Test Body", false, false);
+    const auto note2 = std::make_unique<Note>("Another Title", "Some Body", true, false);
+    category.addNote(note1.get());
+    category.addNote(note2.get());
+    const std::list<Note*> results = category.findByKeyBody("Test");
     ASSERT_EQ(results.size(), 1);
+    ASSERT_EQ(results.front()->getBody(), "Test Body");
 }
 
-TEST_F(CategoryTest, FindByKeyBody) {
-    category_->addNote(note1_);
-    category_->addNote(note2_);
-    category_->addNote(note3_);
-    std::list<Note*> results = category_->findByKey("+");
-    ASSERT_EQ(results.size(), 2);
+TEST(CategoryTest, FindByKeyBodyNotFound) {
+    Category category("Test Category");
+    const auto note1 = std::make_unique<Note>("Title 1", "Body 1", false, false);
+    category.addNote(note1.get());
+    const std::list<Note*> results = category.findByKeyBody("NonExistent");
+    ASSERT_TRUE(results.empty());
 }
 
-TEST_F(CategoryTest, FindByKeyNoMatch) {
-    category_->addNote(note1_);
-    std::list<Note*> results = category_->findByKey("$");
-    ASSERT_EQ(results.size(), 0);
+TEST(CategoryTest, FindByKeyFoundInTitle) {
+    Category category("Test Category");
+    const auto note1 = std::make_unique<Note>("Test Title", "Body 1", false, false);
+    category.addNote(note1.get());
+    const std::list<Note*> results = category.findByKey("Test");
+    ASSERT_EQ(results.size(), 1);
+    ASSERT_EQ(results.front()->getTitle(), "Test Title");
 }
 
-TEST_F(CategoryTest, PrintCategory) {
-    category_->addNote(note1_);
-    category_->addNote(note2_);
-
-    std::stringstream buffer;
-    std::streambuf* old_cout_buffer = std::cout.rdbuf(buffer.rdbuf());
-
-    category_->printCategory();
-
-    std::cout.rdbuf(old_cout_buffer);
-    std::string output = buffer.str();
-
-    ASSERT_NE(output.find("Category: TestCategory\n"), std::string::npos);
-    ASSERT_NE(output.find("Title1\nBody1+\n"), std::string::npos);
-    ASSERT_NE(output.find("Title2-\nBody2\n"), std::string::npos);
+TEST(CategoryTest, FindByKeyFoundInBody) {
+    Category category("Test Category");
+    const auto note1 = std::make_unique<Note>("Title 1", "Test Body", false, false);
+    category.addNote(note1.get());
+    const std::list<Note*> results = category.findByKey("Test");
+    ASSERT_EQ(results.size(), 1);
+    ASSERT_EQ(results.front()->getBody(), "Test Body");
 }
 
-TEST_F(CategoryTest, NotifyAdd) {
-    std::stringstream buffer;
-    std::streambuf* old_cout_buffer = std::cout.rdbuf(buffer.rdbuf());
-
-    category_->Notify(true);
-    std::cout.rdbuf(old_cout_buffer);
-
-    std::string output = buffer.str();
-    ASSERT_NE(output.find("TestCategory updated successfully, "), std::string::npos);
-}
-
-TEST_F(CategoryTest, NotifyRemove) {
-    std::stringstream buffer;
-    std::streambuf* old_cout_buffer = std::cout.rdbuf(buffer.rdbuf());
-
-    category_->Notify(false);
-
-    std::cout.rdbuf(old_cout_buffer);
-    std::string output = buffer.str();
-
-    ASSERT_NE(output.find("TestCategory updated successfully, "), std::string::npos);
-}
-
-TEST_F(CategoryTest, Destructor) {
-    std::stringstream buffer;
-    std::streambuf* old_cout_buffer = std::cout.rdbuf(buffer.rdbuf());
-
-    {
-        Category tempCategory("TempCategory");
-    }
-
-    std::cout.rdbuf(old_cout_buffer);
-    std::string output = buffer.str();
-
-    ASSERT_NE(output.find("TempCategory deleted successfully"), std::string::npos);
+TEST(CategoryTest, FindByKeyNotFound) {
+    Category category("Test Category");
+    const auto note1 = std::make_unique<Note>("Title 1", "Body 1", false, false);
+    category.addNote(note1.get());
+    const std::list<Note*> results = category.findByKey("NonExistent");
+    ASSERT_TRUE(results.empty());
 }

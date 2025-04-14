@@ -5,7 +5,8 @@
 #ifndef CATEGORYCOUNTER_H
 #define CATEGORYCOUNTER_H
 #include <iostream>
-//TODO aggiungere interfce class
+
+//!aggiungere interfce class
 
 class IObserver {
 public:
@@ -13,7 +14,7 @@ public:
     virtual void Update(bool variable) = 0;
 };
 
-class CategoryCounter : public IObserver {
+class CategoryCounter final : public IObserver {
     int counter = 0;
 public:
     ~CategoryCounter() override = default;
