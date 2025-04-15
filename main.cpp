@@ -10,9 +10,6 @@ int main() {
     std::cout << cats << std::endl;
     Animals.addNote(&Cats);
     ImportantNotes.addNote(&Cats);
-    std::cout << "---------------------------------------------------------------------";
-    ImportantNotes.printCategory();
-    std::cout << "---------------------------------------------------------------------";
 
     auto Dogs = Note("Bau", "fuck cats", false, false);
     Animals.addNote(&Dogs);

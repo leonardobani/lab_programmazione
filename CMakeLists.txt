@@ -22,7 +22,13 @@ add_executable(4real
         main.cpp
         Category.h
         CategoryCounter.h
-        Note.h)
+        Note.h
+        Category/removeNoteByTitle.cpp
+        Category/getSpecialSize.cpp
+        Category/findByKeyBody.cpp
+        Category/findByKeyTitle.cpp
+        Category/findByKey.cpp
+)
 
 
 add_executable(runTests
@@ -32,7 +38,13 @@ add_executable(runTests
         test/test_Note.cpp
         Category.h
         CategoryCounter.h
-        Note.h)
+        Note.h
+        Category/getSpecialSize.cpp
+        Category/findByKey.cpp
+        Category/findByKeyBody.cpp
+        Category/findByKeyTitle.cpp
+        Category/removeNoteByTitle.cpp
+)
 
 # Linka GoogleTest solo ai test
 target_link_libraries(runTests gtest gtest_main)
