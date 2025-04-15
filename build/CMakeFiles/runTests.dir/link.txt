@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/runTests.dir/link.d CMakeFiles/runTests.dir/test/test_main.cpp.o CMakeFiles/runTests.dir/test/test_Category.cpp.o CMakeFiles/runTests.dir/test/test_CategoryCounter.cpp.o CMakeFiles/runTests.dir/test/test_Note.cpp.o -o runTests  lib/libgtest.a lib/libgtest_main.a lib/libgtest.a
