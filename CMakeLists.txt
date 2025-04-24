@@ -24,10 +24,7 @@ add_executable(4real
         CategoryCounter.h
         Note.h
         Category/removeNoteByTitle.cpp
-        Category/getSpecialSize.cpp
-        Category/findByKeyBody.cpp
-        Category/findByKeyTitle.cpp
-        Category/findByKey.cpp
+        category.cpp
 )
 
 
@@ -39,10 +36,6 @@ add_executable(runTests
         Category.h
         CategoryCounter.h
         Note.h
-        Category/getSpecialSize.cpp
-        Category/findByKey.cpp
-        Category/findByKeyBody.cpp
-        Category/findByKeyTitle.cpp
         Category/removeNoteByTitle.cpp
 )
 

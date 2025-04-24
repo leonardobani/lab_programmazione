@@ -12,22 +12,28 @@
 #include "CategoryCounter.h"
 
 class ISubject {
-    public:
-        virtual ~ISubject()= default;
-        virtual void Attach(IObserver *observer) = 0;
-        virtual void Detach(IObserver *observer) = 0;
-        virtual void Notify(bool variable) = 0;
+public:
+    virtual ~ISubject() = default;
+
+    virtual void Attach(IObserver *observer) = 0;
+
+    virtual void Detach(IObserver *observer) = 0;
+
+    virtual void Notify(bool variable) = 0;
 };
 
 class Category : public ISubject {
+private:
     std::string name;
-    std::list<Note*> list_;
+    std::list<Note *> list_;
     CategoryCounter delegatedCounter;
 
 public:
-    void Attach (IObserver *observer) override {}
+    void Attach(IObserver *observer) override {
+    }
 
-    void Detach (IObserver *observer) override {}
+    void Detach(IObserver *observer) override {
+    }
 
     explicit Category(std::string newName): name(std::move(newName)) {
         std::cout << "New category created successfully: " << name << std::endl;
@@ -42,7 +48,7 @@ public:
     }
 
 
-    void Notify(const bool addOrRemove) override {
+    void Notify(bool addOrRemove) override {
         std::cout << name << " updated successfully, ";
         delegatedCounter.Update(addOrRemove);
     }
@@ -51,6 +57,7 @@ public:
         list_.push_back(newNote);
         Notify(true);
     }
+
     void removeNote(Note *newNote) {
         list_.remove(newNote);
         Notify(false);
@@ -61,10 +68,13 @@ public:
     }
 
     //! rimuove da titlolo (con il find by key)
-    //! separare i metodi "lunghi"
-    void removeNoteByTitle(const std::string& toDeleteNoteTitle);
-    std::list<Note*> findByKeyTitle(const std::string& key) const;
+    //! separare i metodi "lunghi", si ma tutti nello stesso file
+    void removeNoteByTitle(const std::string &toDeleteNoteTitle);
+
+    std::list<Note *> findByKeyTitle(const std::string &key) const;
+
     std::list<Note *> findByKeyBody(const std::string &key) const;
+
     std::list<Note *> findByKey(const std::string &key) const;
 };
 
